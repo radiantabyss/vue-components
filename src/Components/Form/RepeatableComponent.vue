@@ -1,4 +1,6 @@
 <script>
+import { Container, Draggable } from "vue3-smooth-dnd";
+
 export default {
     name: 'RepeatableComponent',
     props: {
@@ -30,6 +32,7 @@ export default {
         },
     },
     emits: ['update:modelValue'],
+    components: { Container, Draggable },
     data() {
         return {
             items: this.modelValue || [],
@@ -107,74 +110,78 @@ export default {
         <div></div>
     </div>
 
-    <div class="grid items-center mb-10" v-for="(item, i) in items" :key="i">>
-        <div class="col-5 font-12" v-if="show_numbers">{{ i + 1 }}. </div>
-        <div v-for="(input, input_name) in inputs" :key="input_name" :class="input.css_class">
-            <input type="text" class="input"
-                :class="input.input_css_class ? input.input_css_class : ''"
-                :key="`${input_name}_input`"
-                :placeholder="input.placeholder"
-                v-model="item[input_name]"
-                v-if="input.type == 'text'"
-            />
+    <Container @drop="sort" drag-handle-selector=".handle" v-if="items && items.length">
+        <Draggable v-for="(item, i) in items" :key="i">
+            <div class="grid items-center mb-10">
+                <div class="col-5 font-12" v-if="show_numbers">{{ i + 1 }}. </div>
+                <div v-for="(input, input_name) in inputs" :key="input_name" :class="input.css_class">
+                    <input type="text" class="input"
+                        :class="input.input_css_class ? input.input_css_class : ''"
+                        :key="`${input_name}_input`"
+                        :placeholder="input.placeholder"
+                        v-model="item[input_name]"
+                        v-if="input.type == 'text'"
+                    />
 
-            <textarea type="text" class="input"
-                :class="input.input_css_class ? input.input_css_class : ''"
-                :key="`${input_name}_input`"
-                :placeholder="input.placeholder"
-                v-model="item[input_name]"
-                v-if="input.type == 'textarea'"
-            ></textarea>
+                    <textarea type="text" class="input"
+                        :class="input.input_css_class ? input.input_css_class : ''"
+                        :key="`${input_name}_input`"
+                        :placeholder="input.placeholder"
+                        v-model="item[input_name]"
+                        v-if="input.type == 'textarea'"
+                    ></textarea>
 
-            <select class="input"
-                :class="input.input_css_class ? input.input_css_class : ''"
-                :key="`${input_name}_select`"
-                :ref="`select_${i}`"
-                v-model="item[input_name]"
-                @input="setSelected(input_name, i, $event)"
-                v-else-if="input.type == 'select'"
-            >
-                <template v-if="input.options_are_grouped">
-                    <optgroup v-for="(options, group) in input.options" :key="group" :label="Str.ucwords(group)">
-                        <option v-for="(text, value) in options" :key="value" :value="input.options_have_text ? value : text">
-                            {{ input.options_have_text ? text : Str.ucwords(text) }}
-                        </option>
-                    </optgroup>
-                </template>
-                <template v-else>
-                    <option v-for="(text, value) in input.options"
-                        :key="value"
-                        :value="input.options_have_text ? value : text"
+                    <select class="input"
+                        :class="input.input_css_class ? input.input_css_class : ''"
+                        :key="`${input_name}_select`"
+                        :ref="`select_${i}`"
+                        v-model="item[input_name]"
+                        @input="setSelected(input_name, i, $event)"
+                        v-else-if="input.type == 'select'"
                     >
-                        {{ input.options_have_text ? text : Str.ucwords(text) }}
-                    </option>
-                </template>
-            </select>
+                        <template v-if="input.options_are_grouped">
+                            <optgroup v-for="(options, group) in input.options" :key="group" :label="Str.ucwords(group)">
+                                <option v-for="(text, value) in options" :key="value" :value="input.options_have_text ? value : text">
+                                    {{ input.options_have_text ? text : Str.ucwords(text) }}
+                                </option>
+                            </optgroup>
+                        </template>
+                        <template v-else>
+                            <option v-for="(text, value) in input.options"
+                                :key="value"
+                                :value="input.options_have_text ? value : text"
+                            >
+                                {{ input.options_have_text ? text : Str.ucwords(text) }}
+                            </option>
+                        </template>
+                    </select>
 
-            <autocomplete :key="`${input_name}_autocomplete`"
-                :class="input.input_css_class ? input.input_css_class : ''"
-                :text="value[i][input.text_key]"
-                :domain="input.autocomplete_settings.domain"
-                :url="input.autocomplete_settings.url || ''"
-                :limit="input.autocomplete_settings.limit || 20"
-                :search_params="input.autocomplete_settings.search_params || {}"
-                :placeholder="input.autocomplete_settings.placeholder || ''"
-                :autosearch="input.autocomplete_settings.autosearch || false"
-                :autosearch_limit="input.autocomplete_settings.autosearch_limit || 10"
-                :enable_modal="input.autocomplete_settings.enable_modal || false"
-                :can_create="input.autocomplete_settings.can_create || false"
-                v-model="item[input_name]"
-                v-if="input.type == 'autocomplete'"
-            />
-        </div>
+                    <autocomplete :key="`${input_name}_autocomplete`"
+                        :class="input.input_css_class ? input.input_css_class : ''"
+                        :text="value[i][input.text_key]"
+                        :domain="input.autocomplete_settings.domain"
+                        :url="input.autocomplete_settings.url || ''"
+                        :limit="input.autocomplete_settings.limit || 20"
+                        :search_params="input.autocomplete_settings.search_params || {}"
+                        :placeholder="input.autocomplete_settings.placeholder || ''"
+                        :autosearch="input.autocomplete_settings.autosearch || false"
+                        :autosearch_limit="input.autocomplete_settings.autosearch_limit || 10"
+                        :enable_modal="input.autocomplete_settings.enable_modal || false"
+                        :can_create="input.autocomplete_settings.can_create || false"
+                        v-model="item[input_name]"
+                        v-if="input.type == 'autocomplete'"
+                    />
+                </div>
 
-        <div class="col-5">
-            <a class="icon-link-small handle"><sprite id="move" class="color-text" /></a>
-        </div>
-        <div class="col-5">
-            <a @click="remove(i)" class="icon-link-small"><sprite id="trash" class="color-red" /></a>
-        </div>
-    </div>
+                <div class="col-5">
+                    <a class="icon-link-small handle"><sprite id="move" class="color-text" /></a>
+                </div>
+                <div class="col-5">
+                    <a @click="remove(i)" class="icon-link-small"><sprite id="trash" class="color-red" /></a>
+                </div>
+            </div>
+        </Draggable>
+    </Container>
 
     <a @click="add" class="btn btn--auto btn--small mt-10"><sprite id="plus"/> <t>Add </t>{{ name }}</a>
 </div>

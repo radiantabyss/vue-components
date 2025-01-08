@@ -16,5 +16,9 @@
         "parserOptions": {
             "parser": "babel-eslint"
         }
+    },
+    "dependencies": {
+        "dropzone": "^5.9.3",
+        "vue3-smooth-dnd": "^0.0.6"
     }
 }

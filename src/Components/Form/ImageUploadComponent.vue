@@ -1,6 +1,5 @@
 <script>
-import * as DropzoneModule from 'dropzone';
-const Dropzone = DropzoneModule.default || DropzoneModule;
+import Dropzone from "dropzone";
 
 export default {
     name: 'ImageUploadComponent',
