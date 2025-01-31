@@ -56,6 +56,6 @@ export default {
 <template>
 <div class="alert" :class="css_class">
     <a @click="hide" class="alert__close icon-link"><sprite id="x" /></a>
-    <sprite :id="type" /> <div v-html="message"></div>
+    <sprite :id="type" /> <div v-html="__(message)"></div>
 </div>
 </template>

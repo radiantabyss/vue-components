@@ -60,13 +60,13 @@ export default {
         </a>
 
         <div class="subtitle text-center">
-            {{ question }}
+            <t>{{ question }}</t>
         </div>
 
         <div class="mt-60 text-center">
-            <a @click="confirm" class="btn btn--auto" :class="button_class">{{ button_text }}</a>
+            <a @click="confirm" class="btn btn--auto" :class="button_class"><t>{{ button_text }}</t></a>
             <div class="mt-20">
-                <a @click="hide">{{ cancel_text }}</a>
+                <a @click="hide"><t>{{ cancel_text }}</t></a>
             </div>
         </div>
     </div>
