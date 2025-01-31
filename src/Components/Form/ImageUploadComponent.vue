@@ -44,7 +44,7 @@ export default {
         this.inited = true;
 
         this.dz = new Dropzone(this.$refs.dropzone, {
-            url: `${back_url}${this.path}?jwt_token=${localStorage.getItem('jwt_token')}`,
+            url: `${BACK_URL}${this.path}?jwt_token=${localStorage.getItem('jwt_token')}`,
             thumbnailWidth: 150,
             maxFiles: 1,
             maxFilesize: 5,
