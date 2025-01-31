@@ -9,7 +9,7 @@ export default {
     },
     data() {
         let version = import.meta.env.VITE_SPRITE_VERSION;
-
+        let is_dev = import.meta.env.MODE == 'development';
         if ( is_dev ) {
             const now = new Date();
             const rounded_seconds = Math.round(now.getSeconds() / 3) * 3;

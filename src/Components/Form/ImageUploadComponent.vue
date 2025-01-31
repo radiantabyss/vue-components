@@ -81,7 +81,7 @@ export default {
 
     <div class="image-upload__upload" ref="dropzone">
         <div class="image-upload__image">
-            <img :src="uploads_url + modelValue" v-if="modelValue" />
+            <img :src="UPLOADS_URL + modelValue" v-if="modelValue" />
             <sprite id="image" v-else />
         </div>
 
