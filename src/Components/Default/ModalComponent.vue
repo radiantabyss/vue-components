@@ -22,7 +22,7 @@ export default {
             if ( e.detail.name != this.name ) {
                 return;
             }
-            
+
             this.is_visible = true;
             this.$emit('before-open', e.detail);
         },
@@ -36,14 +36,14 @@ export default {
             this.$emit('before-close');
         },
 
-        mousedown(e) {
-            if ( !this.$el.classList.contains('visible') || this.$el.contains(e.target) || !this.click_to_close ) {
+        clickToClose(e) {
+            if ( !this.click_to_close || (this.$el.contains(e.target) && !this.$el.isEqualNode(e.target)) ) {
                 return;
             }
 
             this.hide({
                 detail: {
-                    name: this.name,
+                    name: this.name
                 }
             });
         },
@@ -51,18 +51,21 @@ export default {
     mounted() {
         window.addEventListener('modal-show', this.show);
         window.addEventListener('modal-hide', this.hide);
-        window.addEventListener('mousedown', this.mousedown);
     },
     beforeDestroy() {
         window.removeEventListener('modal-show', this.show);
         window.removeEventListener('modal-hide', this.hide);
-        window.removeEventListener('mousedown', this.mousedown);
     },
 }
 </script>
 
 <template>
-<div class="inline-modal" :class="is_visible ? 'visible' : ''">
-    <slot />
+<div class="modal" :class="is_visible ? 'visible' : ''" @click="clickToClose">
+    <div class="modal__content">
+        <a @click="Modal.hide(name)" class="modal__close">
+            <sprite id="x" class="small" />
+        </a>
+        <slot />
+    </div>
 </div>
 </template>
