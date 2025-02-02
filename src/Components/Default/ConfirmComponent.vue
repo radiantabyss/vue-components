@@ -11,6 +11,7 @@ export default {
             button_text: '',
             button_class: '',
             cancel_text: '',
+            text: '',
         }
     },
     computed: {
@@ -45,6 +46,7 @@ export default {
             this.button_class = e.detail.params.button_class || 'btn--red';
             this.cancel_text = e.detail.params.cancel_text || 'Cancel';
             this.css_class = e.detail.params.css_class || '';
+            this.text = e.detail.params.text || '';
         });
 
         window.addEventListener('confirm-hide', this.hide);
@@ -61,6 +63,10 @@ export default {
 
         <div class="subtitle text-center">
             <t>{{ question }}</t>
+        </div>
+
+        <div class="mb-20" v-if="text">
+            {{ text }}
         </div>
 
         <div class="mt-60 text-center">
