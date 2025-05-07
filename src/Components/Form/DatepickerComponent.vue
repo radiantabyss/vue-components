@@ -107,6 +107,12 @@ export default {
             this.year = new Date(this.value).getFullYear();
             this.month = new Date(this.value).getMonth();
             this.mounted = true;
+
+            if ( !this.modelValue ) {
+                this.watch = false;
+                this.$emit('update:modelValue', this.value);
+                this.watch = true;
+            }
         },
 
         changeMonth(direction) {

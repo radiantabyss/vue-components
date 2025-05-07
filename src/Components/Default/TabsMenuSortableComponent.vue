@@ -1,10 +1,10 @@
 <script>
-import { Container, Draggable } from "vue3-smooth-dnd";
+import { Container } from "vue3-smooth-dnd";
 
 export default {
     name: 'TabsMenuSortableComponent',
     inject: ['active', 'changeTab'],
-    components: { Container, Draggable },
+    components: { Container },
     computed: {
         children() {
             let children = this.$refs.container.$el.children;
