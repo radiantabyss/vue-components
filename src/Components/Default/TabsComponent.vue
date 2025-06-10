@@ -36,7 +36,7 @@ export default {
                 return;
             }
 
-            let query = {...this.$route.query};
+            let query = {};
 
             if ( index ) {
                 query[this.name] = index;
@@ -50,12 +50,6 @@ export default {
                 query,
             });
         },
-    },
-    mounted() {
-        // let children = this.$slots.default() || [];
-        // children.forEach(child => {
-        //     child.$on('change-tab', this.changeTab);
-        // });
     },
     watch: {
         $route() {

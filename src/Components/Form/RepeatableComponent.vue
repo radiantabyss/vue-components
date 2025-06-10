@@ -183,6 +183,6 @@ export default {
         </Draggable>
     </Container>
 
-    <a @click="add" class="btn btn--auto btn--small mt-10"><sprite id="plus"/> <t>Add </t>{{ name }}</a>
+    <a @click="add" class="btn btn--auto btn--small mt-10"><sprite id="plus"/> <t>Add</t> {{ name }}</a>
 </div>
 </template>

@@ -16,6 +16,7 @@ export default {
                 month: '',
                 year: '',
             },
+            watch: true,
         }
     },
     methods: {
@@ -39,6 +40,13 @@ export default {
                     year: split[2],
                 };
             }
+            else {
+                this.fields = {
+                    day: '',
+                    month: '',
+                    year: '',
+                };
+            }
         },
 
         keyup(e) {
@@ -55,7 +63,11 @@ export default {
                 }
             }
 
+            this.watch = false;
             this.$emit('update:modelValue', `${this.fields.year}-${this.fields.month}-${this.fields.day}`);
+            setTimeout(() => {
+                this.watch = true;
+            }, 0);
         },
     },
     mounted() {
@@ -63,6 +75,10 @@ export default {
     },
     watch: {
         modelValue() {
+            if ( !this.watch ) {
+                return;
+            }
+
             this.mount();
         }
     },

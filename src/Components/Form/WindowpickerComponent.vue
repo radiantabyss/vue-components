@@ -33,19 +33,40 @@ export default {
     },
     computed: {
         text() {
+
+        },
+    },
+    methods: {
+        hide() {
+            this.show = false;
+        },
+
+        select(value) {
+            if ( value == 'custom_range' ) {
+                this.show_picker = true;
+                return;
+            }
+
+            this.show_picker = false;
+            this.hide();
+            this.$emit('update:modelValue', value);
+        },
+
+        selectRange(range) {
+            this.hide();
+            this.$emit('update:modelValue', range);
+        },
+
+        valueToText(value) {
             let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-            if ( this.modelValue === '' ) {
+            if ( value === '' ) {
                 return 'None';
             }
 
-            if ( this.options.includes(this.modelValue) ) {
-                return Str.ucwords(this.modelValue);
-            }
-
             //date interval
-            if ( this.modelValue.match(/\d{4}-\d{2}-\d{2}:\d{4}-\d{2}-\d{2}/) ) {
-                let dates = this.modelValue.split(':');
+            if ( value.match(/\d{4}-\d{2}-\d{2}:\d{4}-\d{2}-\d{2}/) ) {
+                let dates = value.split(':');
                 if ( dates[0] == dates[1] ) {
                     return Str.prettify_date(dates[0]);
                 }
@@ -54,13 +75,13 @@ export default {
             }
 
             //date
-            if ( this.modelValue.match(/\d{4}-\d{2}-\d{2}/) ) {
-                return Str.prettify_date(this.modelValue);
+            if ( value.match(/\d{4}-\d{2}-\d{2}/) ) {
+                return Str.prettify_date(value);
             }
 
             //year-month interval
-            if ( this.modelValue.match(/\d{4}-\d{2}:\d{4}-\d{2}/) ) {
-                let years_months = this.modelValue.split(':');
+            if ( value.match(/\d{4}-\d{2}:\d{4}-\d{2}/) ) {
+                let years_months = value.split(':');
 
                 let split_start = years_months[0].split('-');
                 let month_start = Str.ucwords(months[parseInt(split_start[1]) - 1]);
@@ -90,8 +111,8 @@ export default {
             }
 
             //year-month
-            if ( this.modelValue.match(/\d{4}-\d{2}/) ) {
-                let split = this.modelValue.split('-');
+            if ( value.match(/\d{4}-\d{2}/) ) {
+                let split = value.split('-');
                 let month = Str.ucwords(months[parseInt(split[1]) - 1]);
                 let year = split[0];
 
@@ -103,8 +124,8 @@ export default {
             }
 
             //year interval
-            if ( this.modelValue.match(/\d{4}:\d{4}/) ) {
-                let years = this.modelValue.split(':');
+            if ( value.match(/\d{4}:\d{4}/) ) {
+                let years = value.split(':');
                 if ( years[0] == years[1] ) {
                     return years[0];
                 }
@@ -112,28 +133,11 @@ export default {
                 return `${years[0]} - ${years[1]}`;
             }
 
-            return this.modelValue;
-        },
-    },
-    methods: {
-        hide() {
-            this.show = false;
-        },
-
-        select(value) {
-            if ( value == 'custom_range' ) {
-                this.show_picker = true;
-                return;
+            if ( this.options.includes(value) ) {
+                return Str.ucwords(value);
             }
 
-            this.show_picker = false;
-            this.hide();
-            this.$emit('update:modelValue', value);
-        },
-
-        selectRange(range) {
-            this.hide();
-            this.$emit('update:modelValue', range);
+            return value;
         },
     },
     mounted() {
@@ -145,14 +149,14 @@ export default {
 <template>
 <div class="windowpicker">
     <a @click="show = !show" class="windowpicker__value" ref="trigger">
-        {{ __(text) || __('Select Range') }}
+        {{ __(valueToText(modelValue)) || __('Select Range') }}
     </a>
 
     <transition name="simple-fade">
         <div class="windowpicker__popup" v-show="show" v-closable="{ handler: 'hide', exclude: ['trigger'] }">
             <div class="windowpicker__options">
                 <a v-for="option in options" :key="option" @click="select(option)">
-                    {{ __(Str.ucwords(option)) }}
+                    {{ __(valueToText(option)) }}
                 </a>
             </div>
             <div class="windowpicker__picker" v-show="show_picker">

@@ -54,10 +54,10 @@ export default {
 <div class="edit-live" :class="css_class" v-closable="{exclude:['edit'], handler: 'hide'}" @keydown.esc="hide">
     <span v-show="!is_visible" @click="show">{{ Array.isArray(options) ? value : options[value] }}</span>
     <a @click="show" v-show="!is_visible" ref="edit">
-        <sprite id="edit" class="tiny" />
+        <sprite id="edit" />
     </a>
     <form class="inline-flex items-center" v-show="is_visible">
-        <select type="text" v-model="input" class="input edit-live__input" ref="input">
+        <select v-model="input" class="input edit-live__input" ref="input">
             <template v-if="Array.isArray(options)">
                 <option v-for="option in options" :key="option" :value="option">
                     {{ option }}
@@ -70,7 +70,7 @@ export default {
             </template>
         </select>
         <button type="submit" @click.prevent="submit" class="btn-clear">
-            <sprite id="check" class="tiny" />
+            <sprite id="check" />
         </button>
     </form>
 </div>

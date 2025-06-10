@@ -20,7 +20,7 @@ export default {
 
         return h('div', {
             class: {
-                'tabs__content mt-20': true
+                'tabs__content': true
             }
         }, filtered_children);
     },

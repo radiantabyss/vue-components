@@ -50,12 +50,12 @@ export default {
 <div class="edit-live" :class="css_class" v-closable="{exclude:['edit'], handler: 'hide'}" @keydown.esc="hide">
     <span v-show="!is_visible" @click="show">{{ value }}</span>
     <a @click="show" v-show="!is_visible" ref="edit">
-        <sprite id="edit" class="tiny" />
+        <sprite id="edit" />
     </a>
     <form class="inline-flex items-center" v-show="is_visible">
         <input type="text" v-model="input" class="input edit-live__input" ref="input" />
         <button type="submit" @click.prevent="submit" class="btn-clear">
-            <sprite id="check" class="tiny" />
+            <sprite id="check" />
         </button>
     </form>
 </div>

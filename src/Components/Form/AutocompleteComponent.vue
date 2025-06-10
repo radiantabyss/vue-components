@@ -138,7 +138,7 @@ export default {
         },
 
         async setTerm() {
-            if ( this.modelValue == '' || this.text ) {
+            if ( this.modelValue === null || this.modelValue == '' || this.text ) {
                 this.term = '';
                 return;
             }
