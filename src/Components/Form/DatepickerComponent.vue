@@ -92,7 +92,7 @@ export default {
         text() {
             this.is_valid = true;
 
-            let text = Str.prettify_date(this.value);
+            let text = Str.pretty_date(this.value);
             if ( text == 'Invalid Date' ) {
                 this.is_valid = false;
                 return this.value;

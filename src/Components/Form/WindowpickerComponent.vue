@@ -68,15 +68,15 @@ export default {
             if ( value.match(/\d{4}-\d{2}-\d{2}:\d{4}-\d{2}-\d{2}/) ) {
                 let dates = value.split(':');
                 if ( dates[0] == dates[1] ) {
-                    return Str.prettify_date(dates[0]);
+                    return Str.pretty_date(dates[0]);
                 }
 
-                return `${Str.prettify_date(dates[0])} - ${Str.prettify_date(dates[1])}`;
+                return `${Str.pretty_date(dates[0])} - ${Str.pretty_date(dates[1])}`;
             }
 
             //date
             if ( value.match(/\d{4}-\d{2}-\d{2}/) ) {
-                return Str.prettify_date(value);
+                return Str.pretty_date(value);
             }
 
             //year-month interval
