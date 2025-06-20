@@ -22,49 +22,68 @@ export default {
                 this.$emit('update:modelValue', editor.getContent());
             }, 200);
         },
+
+        tinymceInit() {
+            tinymce.init({
+                skin: "oxide-dark",
+                content_css: "dark",
+                base_url: '/tinymce',
+                suffix: '.min',
+                branding: false,
+                selector: '[data-tinymce]',
+                width: '100%',
+                height: '400px',
+                resize: "both",
+                plugins: [
+                    "advlist autolink lists link code paste hr image",
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link hr | insertfile image",
+                content_style: 'body { font-family: \'Montserrat\'}',
+                inline_boundaries: false,
+                relative_urls: true,
+                remove_script_host: false,
+                automatic_uploads: true,
+
+                // Handle image uploads
+                images_upload_handler: function (blobInfo, success, failure) {
+                    // Use FileReader to convert image into base64 string
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        success(e.target.result);  // Call success with base64 string result
+                    };
+                    reader.onerror = function() {
+                        failure('Image conversion failed. Please try again.');
+                    };
+                    reader.readAsDataURL(blobInfo.blob());  // Convert the image to a data URL
+                },
+
+                setup: editor => {
+                    editor.on('Change', () => {
+                        this.updateContent(editor);
+                    });
+                    editor.on('keyup', () => {
+                        this.updateContent(editor);
+                    });
+                },
+            });
+        },
     },
     mounted() {
-        tinymce.init({
-            skin: "oxide-dark",
-            content_css: "dark",
-            skin_url: '/tinymce/skins/ui/oxide-dark',
-            branding: false,
-            selector: '[data-tinymce]',
-            width: '100%',
-            height: '400px',
-            resize: "both",
-            plugins: [
-                "advlist autolink lists link code paste hr image",
-            ],
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link hr | insertfile image",
-            content_style: 'body { font-family: \'Montserrat\'}',
-            inline_boundaries: false,
-            relative_urls: true,
-            remove_script_host: false,
-            automatic_uploads: true,
+        let script = document.querySelector("script[id='tinymce']");
+        if ( !script ) {
+            let script = document.createElement('script');
+            script.src = '/tinymce/tinymce.min.js';
+            script.id = 'tinymce';
 
-            // Handle image uploads
-            images_upload_handler: function (blobInfo, success, failure) {
-                // Use FileReader to convert image into base64 string
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    success(e.target.result);  // Call success with base64 string result
-                };
-                reader.onerror = function() {
-                    failure('Image conversion failed. Please try again.');
-                };
-                reader.readAsDataURL(blobInfo.blob());  // Convert the image to a data URL
-            },
+            script.addEventListener('load', () => {
+                this.tinymceInit();
+            });
 
-            setup: editor => {
-                editor.on('Change', () => {
-                    this.updateContent(editor);
-                });
-                editor.on('keyup', () => {
-                    this.updateContent(editor);
-                });
-            },
-        });
+            document.head.appendChild(script);
+        }
+        else {
+            this.tinymceInit();
+        }
     }
 }
 </script>
