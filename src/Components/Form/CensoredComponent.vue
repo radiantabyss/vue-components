@@ -38,7 +38,7 @@ export default {
         },
 
         copy(value, e) {
-            this.$copyText(value);
+            this.$clipboard(value);
             e.target.innerHTML = '<svg class="svg-check color-green"><use xlink:href="/sprites.svg#clipboard-check"></use></svg>';
 
             setTimeout(() => {
@@ -63,8 +63,8 @@ export default {
 
 <template>
 <div class="censored">
-    <input type="text" class="input" v-model="value" ref="input" v-if="show" />
-    <div class="input" v-else>{{ Str.mask(value) }}</div>
+    <input type="text" class="input" v-model="value" ref="input" v-show="show" />
+    <input type="text" class="input" readonly v-show="!show" :value="Str.mask(value)" />
     <a @click="copy(value, $event)" title="Copy to clipboard">
         <sprite id="clipboard" />
     </a>

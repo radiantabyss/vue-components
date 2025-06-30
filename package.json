@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "dropzone": "^5.9.3",
+        "v-clipboard": "^3.0.0-next.1",
         "vue3-smooth-dnd": "^0.0.6"
     }
 }
