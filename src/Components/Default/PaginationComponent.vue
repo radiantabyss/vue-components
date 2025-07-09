@@ -114,6 +114,14 @@ export default {
             let url = this.computed_url.replace(/\?$/) + '?' + new URLSearchParams(params).toString();
             this.$router.push(`${url}`)
         },
+
+        getFullUrlWithPage(page) {
+            if ( this.full_url.match(/\?$/) ) {
+                return `${this.full_url}${this.page_param}=${page}`;
+            }
+
+            return `${this.full_url}&${this.page_param}=${page}`;
+        },
     },
     mounted() {
         if ( !localStorage.getItem(`${this.computed_url}__per_page`) ) {
@@ -138,11 +146,11 @@ export default {
     </div>
     <div v-else></div>
     <div class="flex items-center" v-if="pages > 1">
-        <router-link :to="`${full_url}&${page_param}=1`" class="page page--arrow" v-if="show_controls">
+        <router-link :to="getFullUrlWithPage(1)" class="page page--arrow" v-if="show_controls">
             <sprite id="control-start" />
         </router-link>
 
-        <router-link :to="`${full_url}&${page_param}=${page - 1}`" class="page page--arrow" v-if="page > 1">
+        <router-link :to="getFullUrlWithPage(page - 1)" class="page page--arrow" v-if="page > 1">
             <sprite id="arrow-left" />
         </router-link>
         <div class="page page--arrow page--disabled" v-else><sprite id="arrow-left" /></div>
@@ -150,16 +158,16 @@ export default {
         <div class="pages">
             <template v-for="i in visible_pages">
                 <div class="page page--current" :key="`${i}_current`" v-if="i == page">{{ i }}</div>
-                <router-link :to="`${full_url}&${page_param}=${i}`" class="page" :key="i" v-else>{{ i }}</router-link>
+                <router-link :to="getFullUrlWithPage(i)" class="page" :key="i" v-else>{{ i }}</router-link>
             </template>
         </div>
 
-        <router-link :to="`${full_url}&${page_param}=${page + 1}`" class="page page--arrow" v-if="page < pages">
+        <router-link :to="getFullUrlWithPage(page + 1)" class="page page--arrow" v-if="page < pages">
             <sprite id="arrow-right" />
         </router-link>
         <div class="page page--arrow page--disabled" v-else><sprite id="arrow-right" /></div>
 
-        <router-link :to="`${full_url}&${page_param}=${pages}`" class="page page--arrow" v-if="show_controls">
+        <router-link :to="getFullUrlWithPage(pages)" class="page page--arrow" v-if="show_controls">
             <sprite id="control-end" />
         </router-link>
     </div>
