@@ -23,7 +23,6 @@ export default {
     data() {
         return {
             dz: null,
-            inited: false,
             loading: false,
         }
     },
@@ -37,12 +36,6 @@ export default {
         },
     },
     mounted() {
-        if ( this.inited || !this.$refs.dropzone ) {
-            return;
-        }
-
-        this.inited = true;
-
         this.dz = new Dropzone(this.$refs.dropzone, {
             url: `${BACK_URL}${this.path}?jwt_token=${localStorage.getItem('jwt_token')}`,
             thumbnailWidth: 150,
@@ -71,7 +64,10 @@ export default {
                 Alert.show(response, 'error');
             }
         });
-    }
+    },
+    unmounted() {
+        this.dz.destroy();
+    },
 }
 </script>
 

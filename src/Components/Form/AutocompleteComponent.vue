@@ -76,6 +76,11 @@ export default {
             required: false,
             default: '',
         },
+        autoselect: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
     },
     emits: ['update:modelValue', 'select'],
     data() {
@@ -111,6 +116,10 @@ export default {
             let data = await Request.get(this.url ? this.url : `/${this.domain}/search`, params);
             this.results = data.items;
             this.results_visible = is_autosearch ? false : true;
+
+            if  ( this.autoselect && this.results.length == 1 ) {
+                this.select(this.results[0]);
+            }
         },
 
         select(result) {

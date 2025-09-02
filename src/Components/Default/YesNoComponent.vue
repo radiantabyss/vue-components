@@ -6,15 +6,15 @@ export default {
             type: [Boolean, Number, String],
             required: true,
         },
-        yes_green: {
+        green: {
             type: Boolean,
             required: false,
             default: false,
         },
-        no_red: {
+        red: {
             type: Boolean,
             required: false,
-            default: true,
+            default: false,
         },
     },
     computed: {
@@ -35,11 +35,11 @@ export default {
         },
 
         css_class() {
-            if ( this.yes && this.yes_green ) {
+            if ( this.yes && this.green ) {
                 return 'color-green';
             }
 
-            if ( !this.yes && this.no_red ) {
+            if ( !this.yes && this.red ) {
                 return 'color-red';
             }
 

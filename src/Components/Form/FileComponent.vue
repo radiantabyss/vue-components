@@ -3,7 +3,7 @@ export default {
     name: 'FileComponent',
     props: {
         modelValue: {
-            type: [String, Number],
+            type: [String, Number, File],
             required: false,
         },
         accept: {
