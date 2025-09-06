@@ -61,11 +61,6 @@ export default {
             required: false,
             default: false,
         },
-        css_class: {
-            type: String,
-            required: false,
-            default: '',
-        },
         create: {
             type: Boolean,
             required: false,
@@ -164,16 +159,6 @@ export default {
         if ( this.term == '' && this.autosearch ) {
             this.search(true);
         }
-
-        for ( let css_class of this.$el.classList ) {
-            if ( ['autocomplete', 'autocomplete--inline'].includes(css_class) ) {
-                continue;
-            }
-
-            this.$refs.input.classList.add(css_class);
-        }
-
-        this.$el.className = `autocomplete ${this.css_class}`;
     },
     watch: {
         modelValue() {

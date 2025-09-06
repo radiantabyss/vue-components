@@ -25,6 +25,7 @@
 
     @include theme() {
         border-color: $primary--dark;
+        background: $bg-light--dark;
     }
 
     &:after {

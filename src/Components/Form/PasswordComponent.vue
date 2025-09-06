@@ -18,16 +18,6 @@ export default {
     methods: {
         mount() {
             this.value = this.modelValue;
-
-            for ( let css_class of this.$el.classList ) {
-                if ( ['password'].includes(css_class) ) {
-                    continue;
-                }
-
-                this.$el.getElementsByTagName('input')[0].classList.add(css_class);
-            }
-
-            this.$el.className = `password`;
         },
 
         handleInput() {

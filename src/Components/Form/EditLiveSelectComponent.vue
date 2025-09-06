@@ -10,10 +10,6 @@ export default {
             type: [Array, Object],
             required: true,
         },
-        css_class: {
-            type: String,
-            required: false,
-        },
     },
     emits: ['submit'],
     data() {
@@ -51,7 +47,7 @@ export default {
 </script>
 
 <template>
-<div class="edit-live" :class="css_class" v-closable="{exclude:['edit'], handler: 'hide'}" @keydown.esc="hide">
+<div class="edit-live" v-closable="{exclude:['edit'], handler: 'hide'}" @keydown.esc="hide">
     <span v-show="!is_visible" @click="show">{{ Array.isArray(options) ? value : options[value] }}</span>
     <a @click="show" v-show="!is_visible" ref="edit">
         <sprite id="edit" />

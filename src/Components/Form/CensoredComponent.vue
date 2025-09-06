@@ -17,16 +17,6 @@ export default {
     methods: {
         mount() {
             this.value = this.modelValue;
-
-            for ( let css_class of this.$el.classList ) {
-                if ( ['censored'].includes(css_class) ) {
-                    continue;
-                }
-
-                this.$refs.input.classList.add(css_class);
-            }
-
-            this.$el.className = `censored`;
         },
 
         handleInput() {

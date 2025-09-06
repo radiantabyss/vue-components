@@ -32,17 +32,6 @@ export default {
             }, 200);
         },
     },
-    mounted() {
-        for ( let css_class of this.$el.classList ) {
-            if ( ['clearable'].includes(css_class) ) {
-                continue;
-            }
-
-            this.$refs.input.classList.add(css_class);
-        }
-
-        this.$el.className = `clearable`;
-    },
     watch: {
         modelValue() {
             this.term = this.modelValue;

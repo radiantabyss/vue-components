@@ -84,19 +84,6 @@ export default {
             this.$emit('update:modelValue', this.leading_zero ? Str.leading_zero(i) : i);
         },
     },
-    mounted() {
-        this.mount();
-
-        for ( let css_class of this.$el.classList ) {
-            if ( ['numberpicker', `numberpicker--${this.type}`].includes(css_class) ) {
-                continue;
-            }
-
-            this.$refs.input.classList.add(css_class);
-        }
-
-        this.$el.className = `numberpicker numberpicker--${this.type}`;
-    },
     watch: {
         modelValue() {
             this.mount();

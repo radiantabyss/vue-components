@@ -62,16 +62,6 @@ export default {
         this.hour = isNaN(parseFloat(split[0])) ? date.getHours() : parseFloat(split[0]);
         this.minute = isNaN(parseFloat(split[1])) ? date.getMinutes() : parseFloat(split[1]);
         this.$emit('update:modelValue', this.value);
-
-        for ( let css_class of this.$el.classList ) {
-            if ( ['timepicker'].includes(css_class) ) {
-                continue;
-            }
-
-            this.$refs.input.classList.add(css_class);
-        }
-
-        this.$el.className = `timepicker`;
     }
 }
 </script>
