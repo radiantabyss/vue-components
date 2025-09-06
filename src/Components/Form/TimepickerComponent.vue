@@ -78,8 +78,8 @@ export default {
 
 <template>
 <div class="timepicker" @keydown.esc="hide">
-    <input type="text" :placeholder="placeholder" autocomplete="off" readonly
-        @click="show('time')" ref="input" :value="value"
+    <input type="text" class="input" :placeholder="placeholder" autocomplete="off"
+        @click="show('time')" ref="input" :value="value" readonly
     />
 
     <div class="timepicker__time" ref="time"
