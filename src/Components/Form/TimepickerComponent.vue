@@ -15,6 +15,7 @@ export default {
     emits: ['update:modelValue'],
     data() {
         return {
+            mounted: false,
             hour: 0,
             minute: 0,
             view: 'none',
@@ -26,6 +27,20 @@ export default {
         },
     },
     methods: {
+        mount() {
+            let date = new Date();
+            let split = this.modelValue.split(':');
+            this.hour = isNaN(parseFloat(split[0])) ? date.getHours() : parseFloat(split[0]);
+            this.minute = isNaN(parseFloat(split[1])) ? date.getMinutes() : parseFloat(split[1]);
+            this.mounted = true;
+
+            if ( !this.modelValue ) {
+                this.watch = false;
+                this.$emit('update:modelValue', this.value);
+                this.watch = true;
+            }
+        },
+
         show(view) {
             this.view = view;
         },
@@ -35,9 +50,11 @@ export default {
         },
 
         select(component, i) {
+            this.watch = false;
             this[component] = i;
             this.view = 'time';
             this.$emit('update:modelValue', this.value);
+            this.watch = true;
         },
 
         changeComponent(component, direction) {
@@ -57,12 +74,17 @@ export default {
         },
     },
     mounted() {
-        let date = new Date();
-        let split = this.modelValue.split(':');
-        this.hour = isNaN(parseFloat(split[0])) ? date.getHours() : parseFloat(split[0]);
-        this.minute = isNaN(parseFloat(split[1])) ? date.getMinutes() : parseFloat(split[1]);
-        this.$emit('update:modelValue', this.value);
-    }
+        this.mount();
+    },
+    watch: {
+        modelValue() {
+            if ( !this.watch ) {
+                return;
+            }
+
+            this.mount();
+        },
+    },
 }
 </script>
 
