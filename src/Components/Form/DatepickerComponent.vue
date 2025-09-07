@@ -12,6 +12,11 @@ export default {
             required: false,
             default: false,
         },
+        readonly: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
     },
     emits: ['update:modelValue'],
     data() {
@@ -205,6 +210,7 @@ export default {
     <input class="datepicker__input input"
         :class="!is_valid ? 'datepicker__input--invalid' : ''"
         :value="text"
+        :readonly="readonly"
         @keyup="parse"
         @click="show = !show"
         ref="input"
