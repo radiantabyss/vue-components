@@ -39,8 +39,10 @@ export default {
         }
     },
     methods: {
-        add() {
+        async add() {
             let item = {};
+            let focus_input_type = null;
+
             for ( let input_name in this.inputs )  {
                 let input = this.inputs[input_name];
 
@@ -48,12 +50,32 @@ export default {
                     let options = input.options_are_grouped ? input.options[Object.keys(input.options)[0]] : input.options;
                     item[input_name] = input.options_have_text ? Object.keys(options)[0] : options[0];
                 }
+                else if ( input.type == 'toggle' ) {
+                    item[input_name] = false;
+                }
                 else {
                     item[input_name] = '';
+                }
+
+                if ( !focus_input_type && ['text', 'autocomplete'].includes(input.type) ) {
+                    focus_input_type = input.type;
                 }
             }
 
             this.items.push(item);
+
+            if ( !focus_input_type ) {
+                return;
+            }
+
+            await this.$nextTick();
+
+            if ( focus_input_type == 'text' ) {
+                this.$refs[`text_${this.items.length - 1}`].focus();
+            }
+            else if ( focus_input_type == 'autocomplete' ) {
+                this.$refs[`autocomplete_${this.items.length - 1}`][0].$refs.input.focus();
+            }
         },
 
         remove(i) {
@@ -104,10 +126,11 @@ export default {
 <template>
 <div>
     <div class="grid" v-if="show_labels && items && items.length">
-        <div v-for="(input, input_name) in inputs" :key="input_name">
-            <div :class="input.input_css_class ? input.input_css_class : ''">{{ Str.ucwords(input_name) }}</div>
+        <div v-for="(input, input_name) in inputs" :key="input_name" :class="input.css_class ? input.css_class : ''">
+            {{ input.label ? input.label : Str.ucwords(input_name) }}
         </div>
-        <div></div>
+        <div class="col-5"></div>
+        <div class="col-5"></div>
     </div>
 
     <Container @drop="sort" drag-handle-selector=".handle" v-if="items && items.length">
@@ -115,10 +138,11 @@ export default {
             <div class="grid items-center mb-10">
                 <div class="col-5 font-12" v-if="show_numbers">{{ i + 1 }}. </div>
                 <div v-for="(input, input_name) in inputs" :key="input_name" :class="input.css_class">
-                    <input type="text" class="input"
+                    <input :type="input.input_type ? input.input_type : 'text'" class="input"
                         :class="input.input_css_class ? input.input_css_class : ''"
                         :key="`${input_name}_input`"
                         :placeholder="input.placeholder"
+                        :ref="`text_${i}`"
                         v-model="item[input_name]"
                         v-if="input.type == 'text'"
                     />
@@ -158,8 +182,8 @@ export default {
 
                     <autocomplete :key="`${input_name}_autocomplete`"
                         :class="input.input_css_class ? input.input_css_class : ''"
-                        :text="value[i][input.text_key]"
-                        :domain="input.autocomplete_settings.domain"
+                        :text="modelValue[i][input.text_key] || ''"
+                        :domain="input.autocomplete_settings.domain || ''"
                         :url="input.autocomplete_settings.url || ''"
                         :limit="input.autocomplete_settings.limit || 20"
                         :search_params="input.autocomplete_settings.search_params || {}"
@@ -168,8 +192,18 @@ export default {
                         :autosearch_limit="input.autocomplete_settings.autosearch_limit || 10"
                         :enable_modal="input.autocomplete_settings.enable_modal || false"
                         :can_create="input.autocomplete_settings.can_create || false"
+                        :ref="`autocomplete_${i}`"
                         v-model="item[input_name]"
                         v-else-if="input.type == 'autocomplete'"
+                    />
+
+                    <toggle :class="input.input_css_class ? input.input_css_class : ''"
+                        :key="`${input_name}_toggle`"
+                        :text="input.text"
+                        :on_text="input.on_text"
+                        :off_text="input.off_text"
+                        v-model="item[input_name]"
+                        v-else-if="input.type == 'toggle'"
                     />
                 </div>
 

@@ -8,20 +8,22 @@
         pointer-events: none;
 
         input:checked + span {
-            background-color: lighten($green, 30%);
+            background-color: lighten($teal, 30%);
         }
     }
 
     input {
-        opacity: 0;
+        position: absolute;
         width: 0;
         height: 0;
+        opacity: 0;
     }
 
     span {
         position: absolute;
         top: 0;
         left: 0;
+        z-index: 1;
         width: 100%;
         height: 100%;
         border-radius: 34px;
@@ -38,8 +40,10 @@
         content: "";
         display: block;
         position: absolute;
+        z-index: 2;
         left: 5px;
-        top: 4px;
+        top: 50%;
+        transform: translateY(-50%);
         width: 14px;
         height: 14px;
         border-radius: 50%;
@@ -49,14 +53,41 @@
     }
 
     input:checked + span {
-        background-color: $green;
+        background-color: $teal;
     }
 
     input:focus + span {
-        box-shadow: 0 0 1px $green;
+        box-shadow: 0 0 1px $teal;
     }
 
     input:checked + span:before {
-        transform: translateX(17px);
+        transform: translateX(17px) translateY(-50%);
+    }
+}
+
+.toggle--with-text {
+    width: auto;
+    height: auto;
+    padding: 4px 12px;
+    font-family: $font-accent;
+    font-size: 20px;
+
+    p {
+        display: inline-block;
+        position: relative;
+        z-index: 3;
+        margin: 0 0 0 12px;
+        pointer-events: none;
+        transition: 0.2s;
+        color: $text--dark;
+    }
+
+    input:checked + span:before {
+        left: calc(100% - 19px);
+        transform: translateY(-50%);
+    }
+
+    input:checked + span + p {
+        margin: 0 12px 0 0;
     }
 }
