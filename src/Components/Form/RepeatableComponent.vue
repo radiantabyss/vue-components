@@ -169,7 +169,7 @@ export default {
                         :enable_modal="input.autocomplete_settings.enable_modal || false"
                         :can_create="input.autocomplete_settings.can_create || false"
                         v-model="item[input_name]"
-                        v-if="input.type == 'autocomplete'"
+                        v-else-if="input.type == 'autocomplete'"
                     />
                 </div>
 

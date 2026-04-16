@@ -12,8 +12,7 @@ export default {
 
         const slot_text = slot_nodes
             .map(node => node.children)
-            .join('')
-            .trim();
+            .join('');
 
         return slot_text ? __(slot_text) : null; // Return the processed slot text
     },

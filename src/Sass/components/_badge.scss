@@ -1,0 +1,47 @@
+.badge {
+    display: inline-flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    color: $white;
+
+    svg {
+        position: relative;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.badge--client {
+    background: #0983a8;
+}
+
+.badge--project {
+    background: #8004b9;
+
+    svg {
+        top: -2px;
+    }
+}
+
+.badge--invoice {
+    background: #09a81a;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.badge--small {
+    width: 24px;
+    height: 24px;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+}

@@ -18,6 +18,11 @@ export default {
             required: false,
             default: () => { return __('Upload Image'); },
         },
+        allowed_extensions: {
+            type: Array,
+            required: false,
+            default() { return ['jpg', 'jpeg', 'png', 'webp', 'svg']; },
+        },
     },
     emits: ['update:modelValue'],
     data() {

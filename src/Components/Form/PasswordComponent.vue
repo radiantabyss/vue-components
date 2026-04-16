@@ -20,10 +20,6 @@ export default {
             this.value = this.modelValue;
         },
 
-        handleInput() {
-            this.$emit('update:modelValue', this.$refs.input.value);
-        },
-
         toggle() {
             this.show = !this.show;
         },
@@ -43,7 +39,7 @@ export default {
 <div class="password">
     <input :type="show ? 'text' : 'password'"
         class="input"
-        name="password"
+        ref="input"
         v-model="value"
         @input="$emit('update:modelValue', value)"
     />
