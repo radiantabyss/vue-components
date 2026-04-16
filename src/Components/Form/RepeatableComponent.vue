@@ -71,7 +71,7 @@ export default {
             await this.$nextTick();
 
             if ( focus_input_type == 'text' ) {
-                this.$refs[`text_${this.items.length - 1}`].focus();
+                this.$refs[`text_${this.items.length - 1}`][0].focus();
             }
             else if ( focus_input_type == 'autocomplete' ) {
                 this.$refs[`autocomplete_${this.items.length - 1}`][0].$refs.input.focus();
