@@ -8,7 +8,7 @@
         pointer-events: none;
 
         input:checked + span {
-            background-color: lighten($teal, 30%);
+            background-color: lighten($green, 30%);
         }
     }
 
@@ -53,11 +53,11 @@
     }
 
     input:checked + span {
-        background-color: $teal;
+        background-color: $green;
     }
 
     input:focus + span {
-        box-shadow: 0 0 1px $teal;
+        box-shadow: 0 0 1px $green;
     }
 
     input:checked + span:before {
