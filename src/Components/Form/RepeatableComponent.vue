@@ -35,6 +35,7 @@ export default {
     components: { Container, Draggable },
     data() {
         return {
+            emit: true,
             items: this.modelValue || [],
         }
     },
@@ -116,7 +117,19 @@ export default {
         }
     },
     watch: {
+        async modelValue() {
+            this.emit = false;
+            this.items = this.modelValue || [];
+
+            await this.$nextTick();
+            this.emit = true;
+        },
+
         items() {
+            if ( !this.emit ) {
+                return;
+            }
+
             this.$emit('update:modelValue', this.items);
         }
     },
