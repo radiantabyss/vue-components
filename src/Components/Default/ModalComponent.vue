@@ -46,6 +46,8 @@ export default {
                     name: this.name
                 }
             });
+
+            document.body.classList.remove('no-scroll');
         },
     },
     mounted() {
@@ -60,7 +62,7 @@ export default {
 </script>
 
 <template>
-<div class="modal" :class="is_visible ? 'visible' : ''" @click="clickToClose">
+<div class="modal" :class="is_visible ? 'visible' : ''" @mousedown="clickToClose">
     <div class="modal__content">
         <a @click="Modal.hide(name)" class="modal__close">
             <sprite id="x" class="small" />

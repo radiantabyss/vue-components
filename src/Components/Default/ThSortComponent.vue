@@ -17,11 +17,6 @@ export default {
             default: 'order',
         }
     },
-    data() {
-        return {
-
-        }
-    },
     computed: {
         icon() {
             let icon = '';
@@ -47,8 +42,15 @@ export default {
                 direction = 'asc';
             }
 
-            query[this.order_by_param] = this.field;
-            query[this.order_param] = direction;
+            if ( query[this.order_by_param] == this.field && query[this.order_param] == 'asc' ) {
+                delete query[this.order_by_param];
+                delete query[this.order_param];
+            }
+            else {
+                query[this.order_by_param] = this.field;
+                query[this.order_param] = direction;
+            }
+
             query.page = 1;
 
             return this.$route.path + '?' + new URLSearchParams(query).toString();

@@ -36,6 +36,7 @@ export default {
     },
     watch: {
         modelValue() {
+            this.input = this.modelValue;
             this.value = this.modelValue;
         },
     },

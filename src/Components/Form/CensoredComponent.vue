@@ -29,7 +29,7 @@ export default {
 
         copy(value, e) {
             this.$clipboard(value);
-            e.target.innerHTML = '<svg class="svg-check color-green"><use xlink:href="/sprites.svg#clipboard-check"></use></svg>';
+            e.target.innerHTML = '<svg class="svg-clipboard-check color-green"><use xlink:href="/sprites.svg#clipboard-check"></use></svg>';
 
             setTimeout(() => {
                 e.target.innerHTML = '<svg class="svg-clipboard"><use xlink:href="/sprites.svg#clipboard"></use></svg>';

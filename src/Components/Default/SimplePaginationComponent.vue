@@ -44,7 +44,7 @@ export default {
             type: Array,
             required: false,
             default() {
-                return [25, 50, 100];
+                return [25, 50, 100, 250];
             },
         },
     },
@@ -94,9 +94,9 @@ export default {
             this.$emit('change', page);
         },
 
-        changePerPage(per_page) {
-            this.current_per_page = per_page;
-            this.$emit('change-per-page', per_page);
+        changePerPage() {
+            this.current_page = 1;
+            this.$emit('change-per-page', this.current_per_page);
         },
     },
     watch: {

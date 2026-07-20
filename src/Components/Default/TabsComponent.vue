@@ -33,6 +33,7 @@ export default {
         changeTab(index) {
             if ( !this.is_route ) {
                 this.active.index = index;
+                this.$emit('change', index);
                 return;
             }
 

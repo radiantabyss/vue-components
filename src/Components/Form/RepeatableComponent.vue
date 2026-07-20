@@ -30,16 +30,45 @@ export default {
             required: false,
             default: false,
         },
+        sortable: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        force_assoc_array: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
     },
     emits: ['update:modelValue'],
     components: { Container, Draggable },
     data() {
         return {
             emit: true,
-            items: this.modelValue || [],
+            items: this.formatModelValue(),
         }
     },
     methods: {
+        formatModelValue() {
+            //if there's only one input then convert a simple array
+            let items = [];
+            if ( this.modelValue && this.modelValue.length ) {
+                if ( !this.force_assoc_array && Object.keys(this.inputs).length == 1 ) {
+                    for ( let value of this.modelValue ) {
+                        let item = {};
+                        item[Object.keys(this.inputs)[0]] = value;
+                        items.push(item);
+                    }
+                }
+                else {
+                    items = this.modelValue;
+                }
+            }
+
+            return items;
+        },
+
         async add() {
             let item = {};
             let focus_input_type = null;
@@ -83,10 +112,6 @@ export default {
             this.items.splice(i, 1);
         },
 
-        removeAll() {
-            this.items = [];
-        },
-
         sort(e) {
             this.items = Items.sort(this.items, e.removedIndex, e.addedIndex);
         },
@@ -119,18 +144,33 @@ export default {
     watch: {
         async modelValue() {
             this.emit = false;
-            this.items = this.modelValue || [];
+            this.items = this.formatModelValue();
 
             await this.$nextTick();
             this.emit = true;
         },
 
-        items() {
-            if ( !this.emit ) {
-                return;
-            }
+        items: {
+            handler() {
+                if ( !this.emit ) {
+                    return;
+                }
 
-            this.$emit('update:modelValue', this.items);
+                //if there's only one input then return a simple array
+                let values = [];
+                for ( let item of this.items ) {
+                    if ( !this.force_assoc_array && Object.keys(this.inputs).length == 1 ) {
+                        item = item[Object.keys(this.inputs)[0]];
+                        values.push(item);
+                    }
+                    else {
+                        values.push(item);
+                    }
+                }
+
+                this.$emit('update:modelValue', values);
+            },
+            deep: true,
         }
     },
 }
@@ -199,12 +239,15 @@ export default {
                         :domain="input.domain || ''"
                         :url="input.url || ''"
                         :limit="input.limit || 20"
+                        :min_characters="input.min_characters || 2"
                         :search_params="input.search_params || {}"
                         :placeholder="input.placeholder || ''"
                         :autosearch="input.autosearch || false"
                         :autosearch_limit="input.autosearch_limit || 10"
+                        :autoselect="input.autoselect || false"
                         :enable_modal="input.enable_modal || false"
-                        :can_create="input.can_create || false"
+                        :create="input.create || false"
+                        :create_url="input.create_url || ''"
                         :ref="`autocomplete_${i}`"
                         v-model="item[input_name]"
                         v-else-if="input.type == 'autocomplete'"
@@ -220,7 +263,7 @@ export default {
                     />
                 </div>
 
-                <div class="col-5">
+                <div class="col-5" v-if="sortable">
                     <a class="icon-link-small handle"><sprite id="move" class="color-text" /></a>
                 </div>
                 <div class="col-5">

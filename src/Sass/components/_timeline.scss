@@ -1,0 +1,108 @@
+.timeline {
+    display: flex;
+}
+
+.timeline__left {
+    position: relative;
+    width: 100px;
+    padding-right: 20px;
+    font-size: 14px;
+    text-align: right;
+    flex: 0 0 auto;
+
+    &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 0;
+        z-index: 1;
+        width: 1px;
+        height: calc(100% - 20px);
+        background: $border;
+    }
+
+    &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: -10px;
+        z-index: 2;
+        width: 12px;
+        height: 12px;
+        border: 4px solid $bg-light;
+        border-radius: 50%;
+        background: $text;
+    }
+
+    @include breakpoint('mobile') {
+        display: none;
+    }
+
+    @include theme() {
+        &:after {
+            background: $text--dark;
+        }
+    }
+}
+
+.timeline__left--primary {
+    &:before,
+    &:after {
+        background: $primary;
+    }
+
+    @include theme() {
+        &:before,
+        &:after {
+            background: $primary--dark;
+        }
+    }
+}
+
+.timeline__left--secondary {
+    &:before,
+    &:after {
+        background: $secondary;
+    }
+
+    @include theme() {
+        &:before,
+        &:after {
+            background: $secondary--dark;
+        }
+    }
+}
+
+.timeline__right {
+    padding-bottom: 10px;
+    padding-left: 20px;
+    flex: 1 1 auto;
+
+    @include breakpoint('mobile') {
+        padding-left: 0;
+    }
+}
+
+.timeline__entry {
+    margin: 0 0 15px;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.timeline__time {
+    margin: 0 0 5px;
+    color: $grey;
+    font-size: 12px;
+
+    @include theme() {
+        color: $grey--dark;
+    }
+}
+
+.timeline__content {
+    font-size: 16px;
+}

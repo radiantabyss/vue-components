@@ -1,5 +1,6 @@
 <script>
 export default {
+    name: 'ToggleComponent',
     props: {
         modelValue: {
             type: [Boolean, Number, String],
@@ -54,7 +55,8 @@ export default {
             this.checked = checked;
         },
 
-        change() {
+        change(e) {
+            e.stopPropagation();
             this.$emit('update:modelValue', this.checked ? 1 : 0);
             this.$emit('change', this.checked ? 1 : 0);
         },
@@ -72,7 +74,7 @@ export default {
 
 <template>
 <label class="toggle" :class="css_class" v-if="checked !== null">
-    <input type="checkbox" ref="input" v-model="checked" @change="change">
+    <input type="checkbox" ref="input" v-model="checked" @change.prevent="change">
     <span></span>
     <p v-if="text !== '' || on_text !== '' || off_text !== ''">
         <template v-if="text !== ''">
