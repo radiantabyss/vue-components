@@ -147,7 +147,7 @@ export default {
 </script>
 
 <template>
-<div class="windowpicker">
+<div class="windowpicker" :class="show_picker ? 'windowpicker--picker-visible' : ''">
     <a @click="show = !show" class="windowpicker__value" ref="trigger">
         {{ __(valueToText(modelValue)) || __('Select Range') }}
     </a>

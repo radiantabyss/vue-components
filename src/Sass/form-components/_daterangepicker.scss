@@ -9,6 +9,14 @@
     @include theme() {
         background: $bg-light--dark;
     }
+
+    a {
+        color: $text;
+
+        @include theme() {
+            color: $text--dark;
+        }
+    }
 }
 
 .daterangepicker__prev,
