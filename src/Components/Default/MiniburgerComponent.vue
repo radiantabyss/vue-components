@@ -17,6 +17,12 @@ export default {
         hide() {
             this.show = false;
         },
+
+        handleClick(e) {
+            if ( e.target.closest('a') ) {
+                this.hide();
+            }
+        },
     },
 }
 </script>
@@ -29,7 +35,7 @@ export default {
     </a>
 
     <transition name="simple-fade">
-        <div v-show="show" v-closable="{ handler: 'hide', exclude: ['trigger'] }">
+        <div v-show="show" v-closable="{ handler: 'hide', exclude: ['trigger'] }" @click="handleClick">
             <slot />
         </div>
     </transition>
