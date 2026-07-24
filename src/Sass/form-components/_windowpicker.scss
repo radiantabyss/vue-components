@@ -36,7 +36,7 @@ a.windowpicker__value {
         background: $bg-light--dark;
     }
 
-    .windowpicker.right & {
+    .windowpicker--picker-visible.right & {
         left: auto;
         right: 0;
     }

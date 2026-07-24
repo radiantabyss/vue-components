@@ -16,7 +16,9 @@ export default {
         text: {
             type: String,
             required: false,
-            default: () => { return __('Upload Image'); },
+            default() { 
+                return __('Upload Image');
+            },
         },
         allowed_extensions: {
             type: Array,

@@ -7,6 +7,11 @@ export default {
             required: false,
             default: '',
         },
+        placeholder: {
+            type: String,
+            required: false,
+            default: '',
+        },
     },
     emits: ['update:modelValue', 'clear'],
     data() {
@@ -43,6 +48,7 @@ export default {
 <template>
 <div class="clearable">
     <input type="text" class="input"
+        :placeholder="placeholder"
         v-model="term"
         @input="emit"
         @keypress.enter="emit"

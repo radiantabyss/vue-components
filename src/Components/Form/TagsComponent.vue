@@ -77,11 +77,6 @@ export default {
         },
     },
     emits: ['update:modelValue'],
-    computed: {
-        visible_options() {
-
-        },
-    },
     data() {
         return {
             watch: true,
