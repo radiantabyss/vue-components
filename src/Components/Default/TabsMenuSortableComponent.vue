@@ -87,7 +87,7 @@ export default {
         this.unmount();
         this.mount();
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.unmount();
     },
 }

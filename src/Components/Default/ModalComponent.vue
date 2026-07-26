@@ -54,7 +54,7 @@ export default {
         window.addEventListener('modal-show', this.show);
         window.addEventListener('modal-hide', this.hide);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener('modal-show', this.show);
         window.removeEventListener('modal-hide', this.hide);
     },
