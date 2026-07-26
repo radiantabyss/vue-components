@@ -1,11 +1,13 @@
 <script>
 import { h } from 'vue';
+import { flattenTabChildren } from './tabsChildren';
 
 export default {
     name: 'TabsButtonsComponent',
     inject: ['name', 'active'],
     render() {
-        let children = this.$slots.default() || [];
+        //flatten so the index matches the menu (drops false-v-if comments, expands <template>)
+        let children = flattenTabChildren(this.$slots.default ? this.$slots.default() : []);
 
         if ( !children.length ) {
             return h('div');

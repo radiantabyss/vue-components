@@ -1,25 +1,104 @@
 <script>
-import { h, cloneVNode, Comment, Text } from 'vue';
-
 export default {
     name: 'TabsMenuComponent',
     inject: ['active', 'changeTab'],
-    methods: {
-        click(index) {
-            this.changeTab(index);
+    computed: {
+        children() {
+            return this.$el ? this.$el.children : [];
         },
     },
-    render() {
-        //take the slotted children, ignore comment/text nodes so the index
-        //lines up with active.index (same as the old $el.children behaviour)
-        let children = (this.$slots.default ? this.$slots.default() : [])
-            .filter(vnode => vnode.type !== Comment && vnode.type !== Text)
-            .map((vnode, i) => cloneVNode(vnode, {
-                class: { active: i == this.active.index },
-                onClick: () => this.click(i),
-            }));
+    methods: {
+        mount() {
+            if ( !this.children.length ) {
+                return;
+            }
 
-        return h('div', { class: 'tabs__menu' }, children);
+            for ( let i = 0; i < this.children.length; i++ ) {
+                let child = this.children[i];
+                let click_handler = this.click.bind(this, i);
+                child.addEventListener('click', click_handler);
+                child.__click_handler = click_handler;
+            }
+
+            this.setActive();
+        },
+
+        //active.query holds the raw route value (a tab name or a numeric position).
+        //the menu owns the names, so it maps it to a numeric position.
+        resolveIndex() {
+            let raw = this.active.query;
+
+            for ( let i = 0; i < this.children.length; i++ ) {
+                if ( this.children[i].getAttribute('name') == raw ) {
+                    return i;
+                }
+            }
+
+            let num = Number(raw);
+            return ( raw !== '' && Number.isInteger(num) && num >= 0 && num < this.children.length ) ? num : 0;
+        },
+
+        setActive() {
+            if ( !this.children.length ) {
+                return;
+            }
+
+            let index = this.resolveIndex();
+            this.active.index = index;
+
+            for ( let i = 0; i < this.children.length; i++ ) {
+                let child = this.children[i];
+                if ( i == index ) {
+                    child.classList.add('active');
+                }
+                else {
+                    child.classList.remove('active');
+                }
+            }
+        },
+
+        unmount() {
+            if ( !this.children.length ) {
+                return;
+            }
+
+            for (let i = 0; i < this.children.length; i++) {
+                let child = this.children[i];
+                if ( child.__click_handler ) {
+                    child.removeEventListener('click', child.__click_handler);
+                    delete child.__click_handler;
+                }
+            }
+        },
+
+        click(index) {
+            this.changeTab({
+                index,
+                name: this.children[index].getAttribute('name'),
+            });
+        },
+    },
+    watch: {
+        //re-resolve + re-highlight when the route changes (e.g. router navigation)
+        'active.query'() {
+            this.setActive();
+        },
+    },
+    mounted() {
+        this.mount();
+    },
+    updated() {
+        this.unmount();
+        this.mount();
+    },
+    beforeUnmount() {
+        this.unmount();
     },
 }
 </script>
+
+<template>
+<div class="tabs__menu">
+    <slot />
+</div>
+</template>

@@ -1,5 +1,5 @@
 <script>
-import { reactive, provide, watch, onMounted, getCurrentInstance } from 'vue';
+import { reactive } from 'vue';
 
 export default {
     name: 'TabsComponent',
@@ -16,9 +16,13 @@ export default {
         },
     },
     data() {
+        let query = this.is_route ? (this.$route.query[this.name] || '') : '';
+        let index = Number(query);
+
         return {
             active: reactive({
-                index: this.is_route ? (this.$route.query[this.name] || '') : '',
+                query,
+                index: (query !== '' && Number.isInteger(index)) ? index : 0,
             }),
         }
     },
@@ -30,17 +34,19 @@ export default {
         }
     },
     methods: {
-        changeTab(index) {
+        changeTab(params) {
+            let value = params.name || params.index;
+
             if ( !this.is_route ) {
-                this.active.index = index;
-                this.$emit('change', index);
+                this.active.query = params.index ? value : '';
+                this.$emit('change', params.index);
                 return;
             }
 
-            let query = {};
+            let query = {...this.$route.query};
 
-            if ( index ) {
-                query[this.name] = index;
+            if ( params.index ) {
+                query[this.name] = value;
             }
             else {
                 delete query[this.name];
@@ -58,7 +64,7 @@ export default {
                 return;
             }
 
-            this.active.index = this.$route.query[this.name] || '';
+            this.active.query = this.$route.query[this.name] || '';
         },
     },
 }
