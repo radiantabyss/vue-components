@@ -86,7 +86,7 @@ export default {
 </script>
 
 <template>
-<div class="input-group">
+<div class="dateinput input-group">
     <input ref="day" type="text" class="input" placeholder="DD"
         pattern="\d*"
         maxlength="2"
