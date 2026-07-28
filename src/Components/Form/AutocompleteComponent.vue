@@ -22,6 +22,13 @@ export default {
             required: false,
             default: '',
         },
+        options: {
+            type: Array,
+            required: false,
+            default() {
+                return [];
+            },
+        },
         limit: {
             type: Number,
             required: false,
@@ -32,10 +39,15 @@ export default {
             required: false,
             default: '',
         },
+        min_characters: {
+            type: Number,
+            required: false,
+            default: 2,
+        },
         search_params: {
             type: Object,
             required: false,
-            default: () => {
+            default() {
                 return {};
             },
         },
@@ -52,11 +64,35 @@ export default {
         autosearch_params: {
             type: Object,
             required: false,
-            default: () => {
+            default() {
                 return {};
             },
         },
-        enable_modal: {
+        autoselect: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        clear_on_select: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        selected: {
+            type: Array,
+            required: false,
+            default() {
+                return [];
+            },
+        },
+        excluded: {
+            type: Array,
+            required: false,
+            default() {
+                return [];
+            },
+        },
+        modal: {
             type: Boolean,
             required: false,
             default: false,
@@ -71,11 +107,6 @@ export default {
             required: false,
             default: '',
         },
-        autoselect: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
     },
     emits: ['update:modelValue', 'select'],
     data() {
@@ -83,14 +114,19 @@ export default {
             term: this.text,
             results: false,
             results_visible: false,
+            watch: true,
         }
     },
     methods: {
         async search(is_autosearch = false) {
-            if ( !is_autosearch && this.term.length < 2 ) {
+            if ( !is_autosearch && this.term.length < this.min_characters ) {
                 this.results = false;
                 this.results_visible = false;
                 return;
+            }
+
+            if ( !this.domain && !this.url ) {
+                return this.searchOptions(is_autosearch);
             }
 
             let params = {
@@ -108,6 +144,14 @@ export default {
                 };
             }
 
+            if ( this.selected.length ) {
+                params.selected = this.selected;
+            }
+
+            if ( this.excluded.length ) {
+                params.excluded = this.excluded;
+            }
+
             let data = await Request.get(this.url ? this.url : `/${this.domain}/search`, params);
             this.results = data.items;
             this.results_visible = is_autosearch ? false : true;
@@ -117,11 +161,58 @@ export default {
             }
         },
 
-        select(result) {
-            this.term = result.text;
+        searchOptions(is_autosearch) {
+            let results;
+
+            if ( this.term != '' ) {
+                results = this.options.filter(option => {
+                    return `${option.text}`.toLowerCase().startsWith(this.term.toLowerCase());
+                });
+
+                let results_containing = this.options.filter(option => {
+                    return `${option.text}`.toLowerCase().includes(this.term.toLowerCase()) && !pluck(results, 'value').includes(option.value);
+                });
+
+                results = results.concat(results_containing);
+            }
+            else {
+                results = this.options;
+            }
+
+            let selected_values = pluck(this.selected, 'value');
+            this.results = results.map(result => {
+                result.selected = selected_values.includes(result.value);
+                return result;
+            });
+
+            this.results_visible = is_autosearch ? false : true;
+
+            if  ( this.autoselect && this.results.length == 1 ) {
+                this.select(this.results[0]);
+            }
+        },
+
+        async select(result) {
+            if ( this.clear_on_select ) {
+                this.term = '';
+                this.results = false;
+            }
+            else {
+                this.term = result.text;
+            }
+
             this.results_visible = false;
+            this.watch = false;
+
             this.$emit('update:modelValue', result.value);
             this.$emit('select', result);
+
+            await this.$nextTick();
+            this.watch = true;
+
+            if ( this.autosearch && this.clear_on_select ) {
+                this.search(true);
+            }
         },
 
         clear() {
@@ -147,26 +238,68 @@ export default {
                 return;
             }
 
+            if ( !this.url && !this.domain ) {
+                let option = this.options.find(option => option.value == this.modelValue);
+                if ( option ) {
+                    this.term = option.text;
+                }
+                return;
+            }
+
             let data = await Request.get(this.url ? this.url : `/${this.domain}/search`, { id: this.modelValue, limit: 1 });
             if ( data.items.length ) {
                 this.term = data.items[0].text;
             }
         },
+
+        async submit() {
+            let data = await Request.post(this.create_url ? this.create_url : `/${this.domain}/create`, {
+                autocomplete_term: this.term,
+            });
+
+            this.results = false;
+            this.results_visible = false;
+            this.$emit('update:modelValue', data.item.id);
+            this.$emit('select', {
+                text: this.term,
+                value: data.item.id,
+            });
+        },
     },
     async mounted() {
         await this.setTerm();
 
-        if ( this.term == '' && this.autosearch ) {
+        if ( this.term == '' && (this.autosearch || this.options.length) ) {
             this.search(true);
         }
     },
     watch: {
         modelValue() {
+            if ( !this.watch ) {
+                return;
+            }
+
             this.setTerm();
         },
 
         search_params() {
             if ( this.autosearch ) {
+                this.search(true);
+            }
+        },
+
+        options() {
+            this.search(true);
+        },
+
+        selected() {
+            if ( this.autosearch || this.options.length ) {
+                this.search(true);
+            }
+        },
+
+        excluded() {
+            if ( this.autosearch || this.options.length ) {
                 this.search(true);
             }
         },
@@ -190,17 +323,22 @@ export default {
         v-if="results !== false"
     >
         <template v-if="results.length">
-            <a @click="select(result)" v-for="result in results" :key="result.value">
-                {{ result.text }}
-            </a>
+            <template v-for="result in results" :key="result">
+                <a @click="select(result)" v-if="!result.selected">
+                    {{ result.text }}
+                </a>
+                <div @click="hide" v-else>
+                    {{ result.text }} <sprite id="check" />
+                </div>
+            </template>
         </template>
         <div class="flex items-center" v-else>
             <t>No results.</t>
-            <a @click="submit" class="ml-20 btn btn--tiny btn--auto" v-if="create"><t>Create</t></a>
+            <button type="button" @click="submit" class="ml-20 btn btn--tiny btn--auto" v-if="create"><t>Create</t></button>
         </div>
     </div>
 
-    <a @click="Modal.show('')" v-if="enable_modal" class="autocomplete__search">
+    <a @click="Modal.show(modal)" v-if="modal" class="autocomplete__search">
         <sprite id="search" />
     </a>
 
