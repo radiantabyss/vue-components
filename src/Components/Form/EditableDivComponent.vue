@@ -16,7 +16,7 @@ export default {
     },
     methods: {
         mount() {
-            this.$el.innerHTML = this.value;
+            this.$el.innerHTML = this.modelValue;
         },
 
         input(e) {
@@ -27,7 +27,7 @@ export default {
         this.mount();
     },
     watch: {
-        value() {
+        modelValue() {
             this.mount();
         },
     },
