@@ -35,7 +35,7 @@ export default {
     </a>
 
     <transition name="simple-fade">
-        <div v-show="show" v-closable="{ handler: 'hide', exclude: ['trigger'] }" @click="handleClick">
+        <div class="miniburger__links" v-show="show" v-closable="{ handler: 'hide', exclude: ['trigger'] }" @click="handleClick">
             <slot />
         </div>
     </transition>
