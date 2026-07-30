@@ -2,7 +2,7 @@
 export default {
     name: 'EditableDivComponent',
     props: {
-        value: {
+        modelValue: {
             type: [String, Number],
             required: false,
             default: '',
