@@ -57,7 +57,7 @@ export default {
     },
     computed: {
         start() {
-            let start = this.page - this.pages_left;
+            let start = this.current_page - this.pages_left;
             if ( start < 1 ) {
                 start = 1;
             }
@@ -66,7 +66,7 @@ export default {
         },
 
         end() {
-            let end = this.page + this.pages_right;
+            let end = this.current_page + this.pages_right;
             if ( end > this.pages ) {
                 end = this.pages;
             }

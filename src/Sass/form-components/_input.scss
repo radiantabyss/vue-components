@@ -43,6 +43,12 @@
         padding-top: 6px;
         padding-bottom: 6px;
     }
+
+    //edge / webview2's own reveal and clear buttons; PasswordComponent has its own toggle
+    &[type="password"]::-ms-reveal,
+    &[type="password"]::-ms-clear {
+        display: none;
+    }
 }
 
 textarea.input {

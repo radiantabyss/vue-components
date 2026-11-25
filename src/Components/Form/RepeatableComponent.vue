@@ -245,7 +245,6 @@ export default {
                         :autosearch="input.autosearch || false"
                         :autosearch_limit="input.autosearch_limit || 10"
                         :autoselect="input.autoselect || false"
-                        :enable_modal="input.enable_modal || false"
                         :create="input.create || false"
                         :create_url="input.create_url || ''"
                         :ref="`autocomplete_${i}`"
